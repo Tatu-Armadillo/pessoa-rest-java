@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR" th:replace="~{base :: template(~{::main})}">
+
+<body>
+    <main class="container">
+        <h1>Excluir Pessoa</h1>
+        <div class="row" th:object="${pessoa}">
+            <div class="mb-3 col-6">
+                <label class="form-label" for="nome">Nome</label>
+                <input class="form-control" type="text" th:field="*{nome}">
+            </div>
+            <div class="mb-3 col-6">
+                <label class="form-label" for="dataNasc">Data de Nascimento</label>
+                <input class="form-control" type="text" th:field="*{dataNasc}">
+            </div>
+            <div class="mb-3 col-6">
+                <label class="form-label" for="sexo">Sexo</label>
+                <input class="form-control" type="text" th:field="*{sexo}">
+            </div>
+            <div class="mb-3 col-6">
+                <label class="form-label" for="altura">Altura</label>
+                <input class="form-control" type="text" th:field="*{altura}">
+            </div>
+            <div class="mb-3 col-6">
+                <label class="form-label" for="peso">Peso</label>
+                <input class="form-control" type="text" th:field="*{peso}">
+            </div>
+            <a class="btn btn-danger" th:href="@{/pessoas/{id}/excluir/confirmar (id=${pessoa.id})}">Confirmar Exclusão</a>
+        </div>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR" th:replace="~{base :: template(~{::main})}">
+
+<body>
+    <main class="container">
+        <h1>Lista de Fornecedores</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>Data Nascimento</th>
+                    <th>Sexo</th>
+                    <th>Altura</th>
+                    <th>Peso</th>
+                    <th>
+                        <a class="btn btn-primary" th:href="@{/pessoas/cadastrar}">
+                            Incluir
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pessoa : ${pessoas}">
+                    <td th:text="${pessoa.id}"></td>
+                    <td th:text="${pessoa.nome}"></td>
+                    <td th:text="${pessoa.dataNasc}"></td>
+                    <td th:text="${pessoa.sexo}"></td>
+                    <td th:text="${pessoa.altura}"></td>
+                    <td th:text="${pessoa.peso}"></td>
+                    <td>
+                        <a class="btn btn-warning" th:href="@{/pessoas/{id}/alterar (id=${pessoa.id})}">Alterar</a>
+                        <a class="btn btn-danger" th:href="@{/pessoas/{id}/excluir (id=${pessoa.id})}">Excluir</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</body>
+
+</html>
