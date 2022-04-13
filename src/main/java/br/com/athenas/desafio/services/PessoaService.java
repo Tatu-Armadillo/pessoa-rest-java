@@ -1,6 +1,7 @@
 package br.com.athenas.desafio.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,11 @@ public class PessoaService {
     }
 
     public Pessoa getPessoa(Long id) {
-        Pessoa pessoa = pessoaRepository.findById(id).get();
-        return pessoa;
+        Optional<Pessoa> op = pessoaRepository.findById(id);
+        if (op.isPresent()) {
+            return op.get();
+        }
+        return new Pessoa();
     }
 
     public Pessoa savePessoa(Pessoa pessoa) {
@@ -38,9 +42,18 @@ public class PessoaService {
     }
 
     public void deletePessoa(Long id) {
-        pessoaRepository.deleteById(id);;
+        pessoaRepository.deleteById(id);
     }
 
-
+    public String calcPesoIdeal(Long id) {
+        Pessoa pessoa = getPessoa(id);
+        Float peso = 0.0F;
+        if(pessoa.getSexo().equals('M')) {
+            peso = (72.7F * pessoa.getAltura()) - 58F; 
+        } else {
+            peso = (62.1F * pessoa.getAltura()) - 44.7F; 
+        }
+        return "Peso ideial " + peso;
+    }
 
 }
