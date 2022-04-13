@@ -40,7 +40,7 @@ public class PessoaRestController {
         return ResponseEntity.ok(pessoa);
     }
 
-    @GetMapping("/imc/{id}")
+    @GetMapping("/ideal/{id}")
     public String calcPesoIdeal(@PathVariable Long id) {
         return pessoaService.calcPesoIdeal(id);
     }
