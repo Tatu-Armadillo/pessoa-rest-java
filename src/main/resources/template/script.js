@@ -25,6 +25,8 @@ async function incluir() {
         .catch((error) => {
             console.log(error);
         })
+    consultaApi()
+    openLista();
 }
 
 async function excluir(id) {
@@ -40,6 +42,8 @@ async function excluir(id) {
         .catch((error) => {
             console.log(error);
         })
+    consultaApi()
+    openLista();
 }
 
 async function alterar(id) {
@@ -58,6 +62,8 @@ async function alterar(id) {
         .catch((error) => {
             console.log(error);
         })
+    consultaApi()
+    openLista();
 }
 
 async function calcPesoIdealApi(id) {
