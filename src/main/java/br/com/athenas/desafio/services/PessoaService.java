@@ -53,7 +53,7 @@ public class PessoaService {
         } else {
             peso = (62.1F * pessoa.getAltura()) - 44.7F; 
         }
-        return "Peso ideial " + peso;
+        return "Peso ideal " + peso;
     }
 
 }
