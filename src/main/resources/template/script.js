@@ -3,15 +3,16 @@ let PesoIdeal = "";
 let main = document.getElementById("main");
 let linhasColunas = "";
 
+const API = "http://localhost:8080/athenas/person"
+
 async function consultaApi() {
-    await fetch("http://localhost:8080/athenas/")
+    await fetch(API)
         .then(dados => dados.json()).then(d => Pessoas.pessoas = d);
 }
-consultaApi();
 
 async function incluir() {
     let pessoa = newPessoa();
-    await fetch("http://localhost:8080/athenas/", {
+    await fetch(API, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -30,7 +31,7 @@ async function incluir() {
 }
 
 async function excluir(id) {
-    await fetch("http://localhost:8080/athenas/" + id, {
+    await fetch(API + id, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json; charset=UTF-8",
@@ -48,7 +49,7 @@ async function excluir(id) {
 
 async function alterar(id) {
     let pessoa = oldPessoa(id);
-    await fetch("http://localhost:8080/athenas/" + id, {
+    await fetch(API + id, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -67,7 +68,7 @@ async function alterar(id) {
 }
 
 async function calcPesoIdealApi(id) {
-    await fetch("http://localhost:8080/athenas/ideal/" + id)
+    await fetch(API + "/ideal/" + id)
         .then(dados => dados.text()).then(texto => PesoIdeal = texto);
 }
 
@@ -94,7 +95,8 @@ async function calcPesoIdeal(id) {
 }
 
 
-function pesquisar() {
+async function pesquisar() {
+    await consultaApi();
     let filtro = document.getElementById("filtro");
     linhasColunas = "";
     let value = filtro.value + "";
@@ -122,8 +124,9 @@ function pesquisar() {
     });
     tbody.innerHTML = linhasColunas;
     if (value == "") {
-        consulta();
+        await consulta();
     }
+    console.log(Pessoas.pessoas);
 }
 
 function newPessoa() {

@@ -1,7 +1,6 @@
 package br.com.athenas.desafio.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,27 +11,27 @@ import br.com.athenas.desafio.repositories.PessoaRepository;
 @Service
 public class PessoaService {
 
+    private final PessoaRepository pessoaRepository;
+
     @Autowired
-    private PessoaRepository pessoaRepository;
+    public PessoaService(final PessoaRepository pessoaRepository) {
+        this.pessoaRepository = pessoaRepository;
+    }
 
     public List<Pessoa> listaPessoas() {
-        return pessoaRepository.findAll();
+        return this.pessoaRepository.findAll();
     }
 
     public Pessoa getPessoa(Long id) {
-        Optional<Pessoa> op = pessoaRepository.findById(id);
-        if (op.isPresent()) {
-            return op.get();
-        }
-        return new Pessoa();
+        return this.pessoaRepository.findById(id).orElseThrow(null);
     }
 
     public Pessoa savePessoa(Pessoa pessoa) {
-        return pessoaRepository.save(pessoa);
+        return this.pessoaRepository.save(pessoa);
     }
 
     public Pessoa updatePessoa(Long id, Pessoa pessoa) {
-        Pessoa update = getPessoa(id);
+        Pessoa update = this.getPessoa(id);
         update.setNome(update.getNome().equals(pessoa.getNome()) ? update.getNome() : pessoa.getNome());
         update.setDataNasc(update.getDataNasc().equals(pessoa.getDataNasc()) ? update.getDataNasc() : pessoa.getDataNasc());
         update.setAltura(update.getAltura().equals(pessoa.getAltura()) ? update.getAltura() : pessoa.getAltura());
@@ -42,16 +41,16 @@ public class PessoaService {
     }
 
     public void deletePessoa(Long id) {
-        pessoaRepository.deleteById(id);
+         this.pessoaRepository.deleteById(id);
     }
 
     public String calcPesoIdeal(Long id) {
-        Pessoa pessoa = getPessoa(id);
+        Pessoa pessoa =  this.getPessoa(id);
         Float peso = 0.0F;
-        if(pessoa.getSexo().equals('M')) {
-            peso = (72.7F * pessoa.getAltura()) - 58F; 
+        if (pessoa.getSexo().equals('M')) {
+            peso = (72.7F * pessoa.getAltura()) - 58F;
         } else {
-            peso = (62.1F * pessoa.getAltura()) - 44.7F; 
+            peso = (62.1F * pessoa.getAltura()) - 44.7F;
         }
         return "Peso ideal " + peso;
     }

@@ -2,8 +2,6 @@ package br.com.athenas.desafio.controllers;
 
 import java.util.List;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,22 +16,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.athenas.desafio.models.Pessoa;
 import br.com.athenas.desafio.services.PessoaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping
+@RequestMapping("/person")
+@Tag(name = "Person", description = "Endpoints for Persons")
 public class PessoaRestController {
 
+    private final PessoaService pessoaService;
+
     @Autowired
-    private PessoaService pessoaService;
+    public PessoaRestController(PessoaService pessoaService) {
+        this.pessoaService = pessoaService;
+    }
 
     @GetMapping
     public List<Pessoa> listaPessoas() {
-        return pessoaService.listaPessoas();
+        return this.pessoaService.listaPessoas();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Pessoa> dateailsPessoa(@PathVariable Long id) {
-        Pessoa pessoa = pessoaService.getPessoa(id);
+        Pessoa pessoa = this.pessoaService.getPessoa(id);
         if (pessoa == null) {
             return ResponseEntity.notFound().build();
         }
@@ -42,27 +48,27 @@ public class PessoaRestController {
 
     @GetMapping("/ideal/{id}")
     public String calcPesoIdeal(@PathVariable Long id) {
-        return pessoaService.calcPesoIdeal(id);
+        return this.pessoaService.calcPesoIdeal(id);
     }
 
     @PostMapping
     @Transactional
     public Pessoa createPessoa(@RequestBody @Valid Pessoa pessoa) {
-        Pessoa p = pessoaService.savePessoa(pessoa);
+        Pessoa p = this.pessoaService.savePessoa(pessoa);
         return p;
     }
 
     @PutMapping("/{id}")
     @Transactional
     public Pessoa updatePessoa(@PathVariable Long id, @RequestBody Pessoa pessoa) {
-        Pessoa p = pessoaService.updatePessoa(id, pessoa);
+        Pessoa p = this.pessoaService.updatePessoa(id, pessoa);
         return p;
     }
 
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity<?> removePessoa(@PathVariable Long id) {
-        pessoaService.deletePessoa(id);
+        this.pessoaService.deletePessoa(id);
         return ResponseEntity.ok().build();
     }
 
