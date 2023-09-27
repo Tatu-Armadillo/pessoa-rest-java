@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.athenas.desafio.models.Pessoa;
 import br.com.athenas.desafio.repositories.PessoaRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PessoaService {
@@ -25,6 +26,7 @@ public class PessoaService {
     public Pessoa getPessoa(Long id) {
         return this.pessoaRepository.findById(id).orElseThrow(null);
     }
+    
 
     public Pessoa savePessoa(Pessoa pessoa) {
         return this.pessoaRepository.save(pessoa);
@@ -40,12 +42,18 @@ public class PessoaService {
         return update;
     }
 
+    @Transactional
+    public Pessoa updatedPeso(Long id, Double peso) {
+        this.pessoaRepository.updatedPeso(id, peso);
+        return this.getPessoa(id);
+    }
+
     public void deletePessoa(Long id) {
-         this.pessoaRepository.deleteById(id);
+        this.pessoaRepository.deleteById(id);
     }
 
     public String calcPesoIdeal(Long id) {
-        Pessoa pessoa =  this.getPessoa(id);
+        Pessoa pessoa = this.getPessoa(id);
         Double peso = 0.0;
         if (pessoa.getSexo().equals('M')) {
             peso = (72.7 * pessoa.getAltura()) - 58;
