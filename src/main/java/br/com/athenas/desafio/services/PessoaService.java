@@ -46,11 +46,11 @@ public class PessoaService {
 
     public String calcPesoIdeal(Long id) {
         Pessoa pessoa =  this.getPessoa(id);
-        Float peso = 0.0F;
+        Double peso = 0.0;
         if (pessoa.getSexo().equals('M')) {
-            peso = (72.7F * pessoa.getAltura()) - 58F;
+            peso = (72.7 * pessoa.getAltura()) - 58;
         } else {
-            peso = (62.1F * pessoa.getAltura()) - 44.7F;
+            peso = (62.1 * pessoa.getAltura()) - 44.7;
         }
         return "Peso ideal " + peso;
     }

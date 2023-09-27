@@ -31,14 +31,14 @@ public class Pessoa {
     private Character sexo;
 
     @Column(name = "Altura")
-    private Float altura;
+    private Double altura;
 
     @Column(name = "Peso")
-    private Float peso;
+    private Double peso;
 
     public Pessoa() { }
 
-    public Pessoa(String pNome, LocalDate pData, Character pSexo, Float pAltura, Float pPeso) {
+    public Pessoa(String pNome, LocalDate pData, Character pSexo, Double pAltura, Double pPeso) {
         this.nome = pNome;
         this.dataNasc = pData;
         this.sexo = pSexo;
@@ -80,19 +80,19 @@ public class Pessoa {
         this.sexo = sexo;
     }
 
-    public Float getAltura() {
+    public Double getAltura() {
         return altura;
     }
 
-    public void setAltura(Float altura) {
+    public void setAltura(Double altura) {
         this.altura = altura;
     }
 
-    public Float getPeso() {
+    public Double getPeso() {
         return peso;
     }
 
-    public void setPeso(Float peso) {
+    public void setPeso(Double peso) {
         this.peso = peso;
     }
     // #endregion
