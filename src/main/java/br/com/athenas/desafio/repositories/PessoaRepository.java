@@ -1,5 +1,7 @@
 package br.com.athenas.desafio.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +19,8 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
             @Param("id") Long id,
             @Param("peso") Double peso);
 
+    @Query("SELECT p FROM Pessoa p WHERE p.nome LIKE CONCAT('%', :nome, '%')")
+    Page<Pessoa> findPersonsByName(
+            Pageable pageable,
+            @Param("nome") String nome);
 }

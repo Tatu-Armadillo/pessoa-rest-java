@@ -1,8 +1,8 @@
 package br.com.athenas.desafio.services;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.athenas.desafio.models.Pessoa;
@@ -19,8 +19,12 @@ public class PessoaService {
         this.pessoaRepository = pessoaRepository;
     }
 
-    public List<Pessoa> listaPessoas() {
-        return this.pessoaRepository.findAll();
+    public Page<Pessoa> findAll(Pageable pageable) {
+        return this.pessoaRepository.findAll(pageable);
+    }
+    
+    public Page<Pessoa> findPersonsByName(Pageable pageable, String nome) {
+        return this.pessoaRepository.findPersonsByName(pageable, nome);
     }
 
     public Pessoa getPessoa(Long id) {
