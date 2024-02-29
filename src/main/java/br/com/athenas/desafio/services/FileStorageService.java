@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import br.com.athenas.desafio.config.FileStorageConfig;
 import br.com.athenas.desafio.exceptions.FileStorageException;
 import br.com.athenas.desafio.exceptions.MyFileNotFoundException;
+import jakarta.validation.constraints.NotNull;
 
 @Service
 public class FileStorageService {
@@ -34,8 +35,12 @@ public class FileStorageService {
         }
     }
 
-    public String storeFile(MultipartFile file) {
-        final String filename = StringUtils.cleanPath(file.getOriginalFilename());
+    public String storeFile(@NotNull MultipartFile file) {
+        final var orignalFileName = file.getOriginalFilename();
+        if (orignalFileName == null) {
+            throw new NullPointerException("m=FileStorageService.storeFile orignalFileName is null");
+        }
+        final String filename = StringUtils.cleanPath(orignalFileName);
         try {
             if (filename.contains("..")) {
                 throw new FileStorageException("Sorry! Filename cotains invalid path sequence " + filename);
@@ -53,12 +58,16 @@ public class FileStorageService {
     public Resource loadFileAsResource(String filename) {
         try {
             final Path filePath = this.fileStoregeLocation.resolve(filename).normalize();
-            final Resource resource = new UrlResource(filePath.toUri());
+            final var uri = filePath.toUri();
+            if (uri == null) {
+                throw new NullPointerException("m=FileStorageService.loadFileAsResource orignalFileName is uri");
+            }
+
+            final Resource resource = new UrlResource(uri);
             if (resource.exists()) {
                 return resource;
-            } else {
-                throw new MyFileNotFoundException("File not found");
             }
+            throw new MyFileNotFoundException("File not found");
         } catch (Exception e) {
             throw new MyFileNotFoundException("File not found", e);
         }

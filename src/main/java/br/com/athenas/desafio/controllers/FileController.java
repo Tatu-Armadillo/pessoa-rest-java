@@ -1,5 +1,6 @@
 package br.com.athenas.desafio.controllers;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import br.com.athenas.desafio.records.UploadFileResponseRecord;
 import br.com.athenas.desafio.services.FileStorageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/file")
@@ -37,9 +39,13 @@ public class FileController {
 
     @PostMapping("/uploadFile")
     public UploadFileResponseRecord uploadFile(
-            @RequestParam("file") MultipartFile file) {
+            @RequestParam("file") @NotNull MultipartFile file) {
 
         final var filename = fileStorageService.storeFile(file);
+        if (filename == null) {
+            throw new NullPointerException("m=FileController.uploadFile filename is null");
+        }
+
         final String fileDownloadUri = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/file/downloadFile")
@@ -56,30 +62,27 @@ public class FileController {
 
         return Arrays.asList(files)
                 .stream()
-                .map(file -> this.uploadFile(file))
+                .map(this::uploadFile)
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/downloadFile/{filename:.+}")
     public ResponseEntity<Resource> downloadFile(
             @PathVariable String filename,
-            HttpServletRequest request) {
+            HttpServletRequest request) throws IOException {
 
         final Resource resource = this.fileStorageService.loadFileAsResource(filename);
         String contentType = "";
-        try {
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (Exception e) { }
-
+        contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         if (contentType.isBlank()) {
             contentType = "application/octet-stream";
         }
 
         return ResponseEntity
-        .ok()
-        .contentType(MediaType.parseMediaType(contentType))
-        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment: filename=\"" + resource.getFilename() + "\"")
-        .body(resource);
+                .ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment: filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
 
     }
 

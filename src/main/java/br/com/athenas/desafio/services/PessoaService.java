@@ -19,7 +19,10 @@ public class PessoaService {
         this.pessoaRepository = pessoaRepository;
     }
 
-    public Page<Pessoa> findAll(Pageable pageable) {
+    public Page<Pessoa> findAll(final Pageable pageable) {
+        if (pageable == null) {
+            throw new NullPointerException("m=PessoaService.findAll pageable is null");
+        }
         return this.pessoaRepository.findAll(pageable);
     }
     
@@ -27,16 +30,22 @@ public class PessoaService {
         return this.pessoaRepository.findPersonsByName(pageable, nome);
     }
 
-    public Pessoa getPessoa(Long id) {
+    public Pessoa getPessoa(final Long id) {
+        if (id == null) {
+            throw new NullPointerException("m=PessoaService.getPessoa id is null");
+        }
         return this.pessoaRepository.findById(id).orElseThrow(null);
     }
     
 
-    public Pessoa savePessoa(Pessoa pessoa) {
+    public Pessoa savePessoa(final Pessoa pessoa) {
+        if (pessoa == null) {
+            throw new NullPointerException("m=PessoaService.savePessoa pessoa is null");
+        }
         return this.pessoaRepository.save(pessoa);
     }
 
-    public Pessoa updatePessoa(Long id, Pessoa pessoa) {
+    public Pessoa updatePessoa(final Long id, final  Pessoa pessoa) {
         Pessoa update = this.getPessoa(id);
         update.setNome(update.getNome().equals(pessoa.getNome()) ? update.getNome() : pessoa.getNome());
         update.setDataNasc(update.getDataNasc().equals(pessoa.getDataNasc()) ? update.getDataNasc() : pessoa.getDataNasc());
@@ -52,13 +61,16 @@ public class PessoaService {
         return this.getPessoa(id);
     }
 
-    public void deletePessoa(Long id) {
+    public void deletePessoa(final Long id) {
+        if (id == null) {
+            throw new NullPointerException("m=PessoaService.deletePessoa id is null");
+        }
         this.pessoaRepository.deleteById(id);
     }
 
-    public String calcPesoIdeal(Long id) {
-        Pessoa pessoa = this.getPessoa(id);
-        Double peso = 0.0;
+    public String calcPesoIdeal(final Long id) {
+        final Pessoa pessoa = this.getPessoa(id);
+        Double peso;
         if (pessoa.getSexo().equals('M')) {
             peso = (72.7 * pessoa.getAltura()) - 58;
         } else {
