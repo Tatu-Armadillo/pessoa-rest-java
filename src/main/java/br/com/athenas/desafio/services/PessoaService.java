@@ -1,5 +1,7 @@
 package br.com.athenas.desafio.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +21,17 @@ public class PessoaService {
         this.pessoaRepository = pessoaRepository;
     }
 
+    public List<Pessoa> findAll() {
+        return this.pessoaRepository.findAll();
+    }
+
     public Page<Pessoa> findAll(final Pageable pageable) {
         if (pageable == null) {
             throw new NullPointerException("m=PessoaService.findAll pageable is null");
         }
         return this.pessoaRepository.findAll(pageable);
     }
-    
+
     public Page<Pessoa> findPersonsByName(Pageable pageable, String nome) {
         return this.pessoaRepository.findPersonsByName(pageable, nome);
     }
@@ -36,7 +42,6 @@ public class PessoaService {
         }
         return this.pessoaRepository.findById(id).orElseThrow(null);
     }
-    
 
     public Pessoa savePessoa(final Pessoa pessoa) {
         if (pessoa == null) {
@@ -45,10 +50,11 @@ public class PessoaService {
         return this.pessoaRepository.save(pessoa);
     }
 
-    public Pessoa updatePessoa(final Long id, final  Pessoa pessoa) {
+    public Pessoa updatePessoa(final Long id, final Pessoa pessoa) {
         Pessoa update = this.getPessoa(id);
         update.setNome(update.getNome().equals(pessoa.getNome()) ? update.getNome() : pessoa.getNome());
-        update.setDataNasc(update.getDataNasc().equals(pessoa.getDataNasc()) ? update.getDataNasc() : pessoa.getDataNasc());
+        update.setDataNasc(
+                update.getDataNasc().equals(pessoa.getDataNasc()) ? update.getDataNasc() : pessoa.getDataNasc());
         update.setAltura(update.getAltura().equals(pessoa.getAltura()) ? update.getAltura() : pessoa.getAltura());
         update.setPeso(update.getPeso().equals(pessoa.getPeso()) ? update.getPeso() : pessoa.getPeso());
         update.setSexo(update.getSexo().equals(pessoa.getSexo()) ? update.getSexo() : pessoa.getSexo());
