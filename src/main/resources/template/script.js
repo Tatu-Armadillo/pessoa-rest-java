@@ -7,7 +7,8 @@ const API = "http://localhost:8080/athenas/person"
 
 async function consultaApi() {
     await fetch(API)
-        .then(dados => dados.json()).then(d => Pessoas.pessoas = d);
+        .then(dados => dados.json())
+        .then(d => Pessoas.pessoas = d.content);
 }
 
 async function incluir() {
